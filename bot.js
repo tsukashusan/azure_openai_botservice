@@ -12,7 +12,7 @@ const CONFIG = {
         "api-key": process.env.OPEN_AI_KEY
     }
 };
-
+const WELCOME_TEXT = process.env.WELCOME_TEXT !== undefined ? process.env.WELCOME_TEXT : "どんなご用件でしょうか。\nどんな要件でも承ります🙇‍♂️";
 const messageTemplete_ = { role: "system", content: process.env.GPT_SYSTEM_SETTING };
 class EchoBot extends ActivityHandler {
 
@@ -34,10 +34,9 @@ class EchoBot extends ActivityHandler {
 
         this.onMembersAdded(async (context, next) => {
             const membersAdded = context.activity.membersAdded;
-            const welcomeText = 'こんにちは。何でも聞いてください🙇‍♂️';
             for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
                 if (membersAdded[cnt].id !== context.activity.recipient.id) {
-                    await context.sendActivity(MessageFactory.text(welcomeText, welcomeText));
+                    await context.sendActivity(MessageFactory.text(WELCOME_TEXT, WELCOME_TEXT));
                 }
             }
             // By calling next() you ensure that the next BotHandler is run.
