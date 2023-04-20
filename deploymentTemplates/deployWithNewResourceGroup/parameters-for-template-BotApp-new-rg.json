@@ -26,6 +26,9 @@
         "capacity": 1
       }
     },
+    "kind": {
+      "value": "linux"
+    },
     "appType": {
       "value": "MultiTenant"
     },
@@ -43,6 +46,27 @@
     },
     "tenantId": {
       "value": ""
+    },
+    "OPEN_AI_URL": {
+      "value": ""
+    },
+    "OPEN_AI_KEY": {
+      "value": ""
+    },
+    "OPEN_AI_MODEL_NAME": {
+      "value": ""
+    },
+    "GPT_SYSTEM_SETTING": {
+      "value": ""
+    },
+    "WELCOME_TEXT": {
+      "value": ""
+    },
+    "WEBSITE_RUN_FROM_PACKAGE": {
+      "value": 1
+    },
+    "SCM_DO_BUILD_DURING_DEPLOYMENT": {
+      "value": true
     }
   }
 }

@@ -45,6 +45,10 @@
         "description": "The SKU of the App Service Plan. Defaults to Standard values."
       }
     },
+    "kind": {
+      "type": "string",
+      "defaultValue": "linux"
+    },
     "tenantId": {
       "type": "string",
       "defaultValue": "[subscription().tenantId]",
@@ -87,6 +91,34 @@
       "metadata": {
         "description": "The User-Assigned Managed Identity Resource Group used for the Bot's Authentication."
       }
+    },
+    "OPEN_AI_URL": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "OPEN_AI_KEY": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "OPEN_AI_MODEL_NAME": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "GPT_SYSTEM_SETTING": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "WELCOME_TEXT": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "WEBSITE_RUN_FROM_PACKAGE": {
+      "type": "int",
+      "defaultValue": 1
+    },
+    "SCM_DO_BUILD_DURING_DEPLOYMENT": {
+      "type": "bool",
+      "defaultValue": true
     }
   },
   "variables": {
@@ -148,9 +180,10 @@
               "comments": "Create a new App Service Plan",
               "type": "Microsoft.Web/serverfarms",
               "name": "[variables('appServicePlanName')]",
-              "apiVersion": "2018-02-01",
+              "apiVersion": "2022-03-01",
               "location": "[variables('resourcesLocation')]",
               "sku": "[parameters('appServicePlanSku')]",
+              "kind": "[parameters('kind')]",
               "properties": {
                 "name": "[variables('appServicePlanName')]"
               }
@@ -158,7 +191,7 @@
             {
               "comments": "Create a Web App using the new App Service Plan",
               "type": "Microsoft.Web/sites",
-              "apiVersion": "2015-08-01",
+              "apiVersion": "2022-03-01",
               "location": "[variables('resourcesLocation')]",
               "kind": "app",
               "dependsOn": [
@@ -173,7 +206,7 @@
                   "appSettings": [
                     {
                       "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                      "value": "10.14.1"
+                      "value": "~18"
                     },
                     {
                       "name": "MicrosoftAppType",
@@ -190,6 +223,34 @@
                     {
                       "name": "MicrosoftAppTenantId",
                       "value": "[variables('appType').tenantId]"
+                    },
+                    {
+                      "name": "OPEN_AI_URL",
+                      "value": "[parameters('OPEN_AI_URL')]"
+                    },
+                    {
+                      "name": "OPEN_AI_KEY",
+                      "value": "[parameters('OPEN_AI_KEY')]"
+                    },
+                    {
+                      "name": "OPEN_AI_MODEL_NAME",
+                      "value": "[parameters('OPEN_AI_MODEL_NAME')]"
+                    },
+                    {
+                      "name": "GPT_SYSTEM_SETTING",
+                      "value": "[parameters('GPT_SYSTEM_SETTING')]"
+                    },
+                    {
+                      "name": "WELCOME_TEXT",
+                      "value": "[parameters('WELCOME_TEXT')]"
+                    },
+                    {
+                      "name": "WEBSITE_RUN_FROM_PACKAGE",
+                      "value": "[parameters('WEBSITE_RUN_FROM_PACKAGE')]"
+                    },
+                    {
+                      "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",
+                      "value": "[parameters('SCM_DO_BUILD_DURING_DEPLOYMENT')]"
                     }
                   ],
                   "cors": {

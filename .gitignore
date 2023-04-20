@@ -2,3 +2,5 @@ node_modules
 lib
 .env
 .vscode/launch.json
+web.config
+azure_openai_botservice.zip
