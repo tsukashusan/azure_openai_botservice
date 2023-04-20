@@ -52,6 +52,7 @@ class EchoBot extends ActivityHandler {
                 message];
         }
     }
+ 
     async requestOpenAI(msg, id) {
         var url = "";
         var slashIndex = OPEN_AI_URL.lastIndexOf("/");
@@ -68,10 +69,43 @@ class EchoBot extends ActivityHandler {
         let OPENAI_API_BASE = sprintf(url, OPEN_AI_URL, OPEN_AI_MODEL_NAME)
         var body =
         {
-            messages: msg
+            messages: msg,
+            stream: false
         };
         var responseData = [];
         var ret = "";
+        var stream = async (res) =>{
+            res.on('data', (chunk) => {
+                responseData.push(chunk);
+                if(1 <= responseData.length){
+                    responseData.forEach(element => {
+                        var s = (new TextDecoder).decode(element);
+                        var a = s.split("data: ")
+                        a.forEach((element)=>{
+                            if(0 < element.length && 0 < element.indexOf("DONE")){
+                                console.log(element);
+                            }else if(0 < element.length){
+                                console.log(element);
+                                var j = JSON.parse(element);
+                                if(j.choices[0].delta.content !== undefined){
+                                    console.log(j.choices[0].delta.content);
+                                }
+                            }
+                        })
+                    });
+                }
+            }).on('end', () => {
+                var s = Buffer.concat(responseData);
+                var a = Buffer.concat(s);
+                ret = JSON.parse(a);
+                resolve(ret);
+            }).on('error', (e) => {
+                Console.log(e);
+                console.log("Got error: " + e.message);
+                context.done(null, 'FAILURE');
+                reject(e);
+            });
+        }
         try {
             let promise = new Promise((resolve, reject) => {
                 const requestData = JSON.stringify(body);
@@ -80,11 +114,11 @@ class EchoBot extends ActivityHandler {
                     headers: CONFIG.headers,
                 };
                 const url = OPENAI_API_BASE;
-                const request = https.request(url, options, (res) => {
+                const request = https.request(url, options, async (res) => {
                     res.on('data', (chunk) => {
                         responseData.push(chunk);
                     }).on('end', () => {
-                        ret = JSON.parse(Buffer.concat(responseData));
+                        var ret = JSON.parse(Buffer.concat(responseData));
                         resolve(ret);
                     }).on('error', (e) => {
                         Console.log(e);
@@ -97,8 +131,6 @@ class EchoBot extends ActivityHandler {
                 request.end();
             });
             ret = await promise;
-            
-            //ret = await axios.post(OPENAI_API_BASE, body, config);
             console.log(ret);
         } catch (e) {
             console.log(e);
