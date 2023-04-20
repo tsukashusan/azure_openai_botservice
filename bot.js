@@ -53,7 +53,19 @@ class EchoBot extends ActivityHandler {
         }
     }
     async requestOpenAI(msg, id) {
-        let OPENAI_API_BASE = sprintf("https://%s/openai/deployments/%s/chat/completions?api-version=2023-03-15-preview", OPEN_AI_URL, OPEN_AI_MODEL_NAME)
+        var url = "";
+        var slashIndex = OPEN_AI_URL.lastIndexOf("/");
+        var httpsIndex = OPEN_AI_URL.indexOf("https");
+        if( slashIndex === (OPEN_AI_URL.length - 1) && httpsIndex === 0 ){
+            url = "%sopenai/deployments/%s/chat/completions?api-version=2023-03-15-preview";
+        }else if( slashIndex === (OPEN_AI_URL.length - 1) ){
+            url = "https://%sopenai/deployments/%s/chat/completions?api-version=2023-03-15-preview";
+        }else if( httpsIndex === 0 ){
+            url = "%s/openai/deployments/%s/chat/completions?api-version=2023-03-15-preview";
+        }else{
+            url = "https://%s/openai/deployments/%s/chat/completions?api-version=2023-03-15-preview";
+        }
+        let OPENAI_API_BASE = sprintf(url, OPEN_AI_URL, OPEN_AI_MODEL_NAME)
         var body =
         {
             messages: msg
