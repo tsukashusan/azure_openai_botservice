@@ -97,10 +97,6 @@
         "description": "The Azure AD Tenant ID to use as part of the Bot's Authentication. Only used for SingleTenant and UserAssignedMSI app types. Defaults to \"Subscription Tenant ID\"."
       }
     },
-    "MicrosoftAppType": {
-      "type": "string",
-      "defaultValue": "MultiTenant"
-    },
     "OPEN_AI_URL": {
       "type": "string",
       "defaultValue": ""
@@ -113,13 +109,37 @@
       "type": "string",
       "defaultValue": ""
     },
-    "GPT_SYSTEM_SETTING": {
+    "GPT_SYSTEM_SETTING_1": {
       "type": "string",
       "defaultValue": ""
     },
-    "WELCOME_TEXT": {
+    "WELCOME_TEXT_1": {
       "type": "string",
       "defaultValue": ""
+    },
+    "CHANGE_TEXT_1": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "GPT_SYSTEM_SETTING_2": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "WELCOME_TEXT_2": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "CHANGE_TEXT_2": {
+      "type": "string",
+      "defaultValue": ""
+    },
+    "MAX_TOKEN": {
+      "type": "int",
+      "defaultValue": 8192
+    },
+    "BUFFER": {
+      "type": "int",
+      "defaultValue": 300
     },
     "WEBSITE_RUN_FROM_PACKAGE": {
       "type": "int",
@@ -128,6 +148,10 @@
     "SCM_DO_BUILD_DURING_DEPLOYMENT": {
       "type": "bool",
       "defaultValue": true
+    },
+    "linuxFxVersion": {
+      "type": "string",
+      "defaultValue": "NODE|18-lts"
     }
   },
   "variables": {
@@ -172,6 +196,7 @@
       "sku": "[parameters('newAppServicePlanSku')]",
       "kind": "[parameters('kind')]",
       "properties": {
+        "reserved": true,
         "name": "[variables('servicePlanName')]"
       }
     },
@@ -180,7 +205,7 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2022-03-01",
       "location": "[variables('servicePlanLocation')]",
-      "kind": "app",
+      "kind": "app,linux",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]"
       ],
@@ -190,6 +215,10 @@
         "name": "[parameters('appServiceName')]",
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('servicePlanName'))]",
         "siteConfig": {
+          "reserved": true,
+          "linuxFxVersion": "[parameters('linuxFxVersion')]",
+          "minTlsVersion": "1.2",
+          "ftpsState": "FtpsOnly",
           "appSettings": [
             {
               "name": "WEBSITE_NODE_DEFAULT_VERSION",
@@ -212,10 +241,6 @@
               "value": "[variables('appType').tenantId]"
             },
             {
-              "name": "MicrosoftAppType",
-              "value": "[parameters('MicrosoftAppType')]"
-            },
-            {
               "name": "OPEN_AI_URL",
               "value": "[parameters('OPEN_AI_URL')]"
             },
@@ -228,12 +253,36 @@
               "value": "[parameters('OPEN_AI_MODEL_NAME')]"
             },
             {
-              "name": "GPT_SYSTEM_SETTING",
-              "value": "[parameters('GPT_SYSTEM_SETTING')]"
+              "name": "GPT_SYSTEM_SETTING_1",
+              "value": "[parameters('GPT_SYSTEM_SETTING_1')]"
             },
             {
-              "name": "WELCOME_TEXT",
-              "value": "[parameters('WELCOME_TEXT')]"
+              "name": "WELCOME_TEXT_1",
+              "value": "[parameters('WELCOME_TEXT_1')]"
+            },
+            {
+              "name": "CHANGE_TEXT_1",
+              "value": "[parameters('CHANGE_TEXT_1')]"
+            },
+            {
+              "name": "GPT_SYSTEM_SETTING_2",
+              "value": "[parameters('GPT_SYSTEM_SETTING_2')]"
+            },
+            {
+              "name": "WELCOME_TEXT_2",
+              "value": "[parameters('WELCOME_TEXT_2')]"
+            },
+            {
+              "name": "CHANGE_TEXT_2",
+              "value": "[parameters('CHANGE_TEXT_2')]"
+            },
+            {
+              "name": "MAX_TOKEN",
+              "value": "[parameters('MAX_TOKEN')]"
+            },
+            {
+              "name": "BUFFER",
+              "value": "[parameters('BUFFER')]"
             },
             {
               "name": "WEBSITE_RUN_FROM_PACKAGE",

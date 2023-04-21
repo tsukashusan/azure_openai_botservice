@@ -6,7 +6,7 @@
       "value": ""
     },
     "azureBotSku": {
-      "value": "S1"
+      "value": "F0"
     },
     "azureBotRegion": {
       "value": "global"

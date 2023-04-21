@@ -15,7 +15,7 @@
       "value": ""
     },
     "newAppServicePlanLocation": {
-      "value": ""
+      "value": "japaneast"
     },
     "newAppServicePlanSku": {
       "value": {
@@ -56,17 +56,38 @@
     "OPEN_AI_MODEL_NAME": {
       "value": ""
     },
-    "GPT_SYSTEM_SETTING": {
+    "GPT_SYSTEM_SETTING_1": {
       "value": ""
     },
-    "WELCOME_TEXT": {
+    "WELCOME_TEXT_1": {
       "value": ""
+    },
+    "CHANGE_TEXT_1": {
+      "value": ""
+    },
+    "GPT_SYSTEM_SETTING_2": {
+      "value": ""
+    },
+    "WELCOME_TEXT_2": {
+      "value": ""
+    },
+    "CHANGE_TEXT_2": {
+      "value": ""
+    },
+    "MAX_TOKEN": {
+      "value": 8192
+    },
+    "BUFFER": {
+      "value": 300
     },
     "WEBSITE_RUN_FROM_PACKAGE": {
       "value": 1
     },
     "SCM_DO_BUILD_DURING_DEPLOYMENT": {
       "value": true
+    },
+    "linuxFxVersion" : {
+      "value": "NODE|18-lts"
     }
   }
 }
