@@ -70,6 +70,13 @@ adapter.onTurnError = onTurnErrorHandler;
 // Create the main dialog.
 const myBot = new EchoBot();
 
+server.get({path: '/'},
+    restify.plugins.serveStatic({
+        charSet: "UTF-8",
+        directory: __dirname + "/content",
+        default: 'index.html'
+    }));
+
 // Listen for incoming requests.
 server.post('/api/messages', async (req, res) => {
     // Route received a request to adapter for processing
