@@ -4,3 +4,6 @@ lib
 .vscode/launch.json
 web.config
 azure_openai_botservice.zip
+*.bot
+*.zip
+ngrok*
