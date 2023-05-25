@@ -154,6 +154,7 @@ class EchoBot extends ActivityHandler {
         let OPENAI_API_BASE = sprintf(url, OPEN_AI_URL, OPEN_AI_MODEL_NAME, OPEN_AI_API_VESION)
         var body =
         {
+            max_tokens: 4096,
             messages: msg
         };
         var responseData = [];
