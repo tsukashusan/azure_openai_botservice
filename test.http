@@ -1,0 +1,4 @@
+@appName=<appName>
+POST http://{{appName}}.azurewebsites.net/api/messages
+
+

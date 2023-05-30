@@ -145,6 +145,10 @@
       "type": "int",
       "defaultValue": 1
     },
+    "NODE_TLS_REJECT_UNAUTHORIZED": {
+      "type": "int",
+      "defaultValue": 1
+    },
     "SCM_DO_BUILD_DURING_DEPLOYMENT": {
       "type": "bool",
       "defaultValue": true
@@ -287,6 +291,10 @@
             {
               "name": "WEBSITE_RUN_FROM_PACKAGE",
               "value": "[parameters('WEBSITE_RUN_FROM_PACKAGE')]"
+            },
+            {
+              "name": "NODE_TLS_REJECT_UNAUTHORIZED",
+              "value": "[parameters('NODE_TLS_REJECT_UNAUTHORIZED')]"
             },
             {
               "name": "SCM_DO_BUILD_DURING_DEPLOYMENT",

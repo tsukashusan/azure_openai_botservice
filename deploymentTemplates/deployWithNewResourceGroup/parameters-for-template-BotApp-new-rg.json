@@ -83,6 +83,9 @@
     "WEBSITE_RUN_FROM_PACKAGE": {
       "value": 1
     },
+    "NODE_TLS_REJECT_UNAUTHORIZED": {
+      "value": 1
+    },
     "SCM_DO_BUILD_DURING_DEPLOYMENT": {
       "value": true
     }
