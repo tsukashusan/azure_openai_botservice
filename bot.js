@@ -44,19 +44,20 @@ class EchoBot extends ActivityHandler {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
             const replyText = `${context.activity.text}`;
-            console.log('context.activity.recipient.id', context.activity.recipient.id);
+            var id = context.activity.from.id;
+            console.log('context.activity.from.id', id);
             await context.sendActivity({type: 'typing'});
-            var character_number = await this.getCharacter_number(context.activity.recipient.id);
-            var usage = await this.getUsage(context.activity.recipient.id);
-            await this.setMessage(context.activity.recipient.id, { role: "user", content: replyText }, usage, character_number);
-            //var reqest2OpenAI = this.messageArray[context.activity.recipient.id];
-            var reqest2OpenAI = await this.getMessage(context.activity.recipient.id, usage, replyText, MODEL);
+            var character_number = await this.getCharacter_number(id);
+            var usage = await this.getUsage(id);
+            await this.setMessage(id, { role: "user", content: replyText }, usage, character_number);
+            //var reqest2OpenAI = this.messageArray[id];
+            var reqest2OpenAI = await this.getMessage(id, usage, replyText, MODEL);
             var changeTexgt = reqest2OpenAI[CHANGE_TEXT_INDEX];
             var content = reqest2OpenAI[CONTENT_INDEX_NUMBER];
             if (changeTexgt !== undefined && 0 < changeTexgt.length) {
                 await context.sendActivity(MessageFactory.text(changeTexgt, changeTexgt));
             }
-            var res = await this.requestOpenAI(content, context.activity.recipient.id);
+            var res = await this.requestOpenAI(content, id);
             var notset = false;
             var answer = '';
             if (res.hasOwnProperty("error") && res.error.hasOwnProperty("code") && res.error.code === "429") {
@@ -68,7 +69,7 @@ class EchoBot extends ActivityHandler {
                 console.log('res:', JSON.stringify(res));
                 answer = JSON.stringify(res);
             }
-            if (!notset) await this.setMessage(context.activity.recipient.id, res.choices[0].message, res.usage, reqest2OpenAI[CHARACTER_NUMBER_INDEX]);
+            if (!notset) await this.setMessage(id, res.choices[0].message, res.usage, reqest2OpenAI[CHARACTER_NUMBER_INDEX]);
             await context.sendActivity(MessageFactory.text(answer, answer));
             // By calling next() you ensure that the next BotHandler is run.
             await next();
@@ -76,8 +77,10 @@ class EchoBot extends ActivityHandler {
 
         this.onMembersAdded(async (context, next) => {
             const membersAdded = context.activity.membersAdded;
-            for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
-                if (membersAdded[cnt].id !== context.activity.recipient.id) {
+            var id = context.activity.recipient.id;
+            console.log('context.activity.recipient.id:', id);
+            for (const idx in context.activity.membersAdded) {
+                if (membersAdded[idx].id !== id) {
                     await context.sendActivity(MessageFactory.text(TEMPLATE[FIRST_CHARACTER_NUMBER].WELCOME_TEXT, TEMPLATE[FIRST_CHARACTER_NUMBER].WELCOME_TEXT));
                 }
             }
@@ -154,6 +157,7 @@ class EchoBot extends ActivityHandler {
         let OPENAI_API_BASE = sprintf(url, OPEN_AI_URL, OPEN_AI_MODEL_NAME, OPEN_AI_API_VESION)
         var body =
         {
+            user: id,
             max_tokens: 4096,
             messages: msg
         };
